@@ -24,6 +24,8 @@ Route::middleware(['auth'])->group(function () {
     Route::view('profile', 'profile')
         ->name('profile');
 
+    Route::view('admin', 'admin')
+        ->name('admin');
 
 });
 
