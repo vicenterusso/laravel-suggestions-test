@@ -1,0 +1,34 @@
+<div class="flex justify-between bg-gray-100 p-4 rounded-lg mb-5">
+    <div class="w-full mr-10">
+        <h3><span class="font-bold">Data de Criação:</span> {{CREATED_AT}}</h3>
+        <h3><span class="font-bold">Título:</span> {{TITULO}} (#{{ID}})</h3>
+        <p class="mt-1 font-bold">Descrição da sugestão:</p>
+        <p>{{DESCRICAO}}</p>
+        <p class="mt-1"><span class="font-bold">Autor:</span> {{USER_NAME}}</p>
+
+        <div id="alert-{{ID}}" class="hidden bg-green-100 border-green-400 text-green-700 border px-4 py-3 rounded relative mt-5" role="alert">
+            <span class="block sm:inline">Voto computado com sucesso!</span>
+            <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
+                <svg class="fill-current h-6 w-6 text-red" onclick="document.getElementById('alert-{{ID}}').classList.add('hidden');" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                    <title>Close</title>
+                    <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-2.779a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/>
+                    </svg>
+            </span>
+        </div>
+
+        <div id="alert-error-{{ID}}" class="hidden bg-red-100 border-red-400 text-red-700 border px-4 py-3 rounded relative mt-5" role="alert">
+            <span class="block sm:inline">Você já votou nesta sugestão!</span>
+            <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
+                <svg class="fill-current h-6 w-6 text-red" onclick="document.getElementById('alert-error-{{ID}}').classList.add('hidden');" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                    <title>Close</title>
+                    <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-2.779a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/>
+                    </svg>
+            </span>
+        </div>
+
+    </div>
+    <div class="flex flex-col">
+        <button data-id="{{ID}}" class="btn-vote w-[100px] bg-blue-500 text-white px-4 py-2 rounded-lg">Votar 👍</button>
+        <span class="text-gray-500 text-center">Votos: <span class="font-bold text-black">{{VOTES}}</span></span>
+    </div>
+</div>
