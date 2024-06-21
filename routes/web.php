@@ -20,6 +20,8 @@ Route::middleware(['auth'])->group(function () {
     Route::view('dashboard', 'dashboard')
         ->name('dashboard');
 
+    Route::view('dashboard-api', 'dashboard-api')
+        ->name('dashboard-api');
 
     Route::view('profile', 'profile')
         ->name('profile');

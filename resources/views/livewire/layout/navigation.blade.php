@@ -36,6 +36,11 @@ new class extends Component
                 </div>
 
                 <!-- Navigation Links -->
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('dashboard-api')" :active="request()->routeIs('dashboard-api')">
+                        Sugestões (API)
+                    </x-nav-link>
+                </div>
                 @if(auth()->user()->isAdmin())
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('admin')" :active="request()->routeIs('admin')">
