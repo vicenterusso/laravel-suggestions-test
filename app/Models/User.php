@@ -42,4 +42,21 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function isAdmin() {
+        return $this->admin === 1;
+    }
+
+    // Evento de criação de usuário
+    public static function boot()
+    {
+        parent::boot();
+        static::creating(function ($model) {
+            // Se não houver nenhum usuário cadastrado,
+            // o primeiro usuário será admin
+            if (User::count() == 0) {
+                $model->admin = 1;
+            }
+        });
+    }
 }
