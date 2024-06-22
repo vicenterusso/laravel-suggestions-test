@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('/suggestions',[\App\Http\Controllers\SuggestionController::class, 'index']);
+    Route::post('/suggestion',[\App\Http\Controllers\SuggestionController::class, 'create']);
+    Route::post('/suggestion/vote/{id}',[\App\Http\Controllers\SuggestionController::class, 'vote']);
 
 
 });
