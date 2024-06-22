@@ -15,6 +15,19 @@ Clonar o repositorio
 git@github.com:vicenterusso/laravel-suggestions-test.git
 ```
 
+Copie o `.env.example` para `.env` e configure as variaveis corretamente.
+
+```
+DB_CONNECTION=mysql
+DB_HOST=localhost
+DB_PORT=3306
+DB_DATABASE=laravel
+DB_USERNAME=root
+DB_PASSWORD=root
+```
+
+*Obs: Caso use docker (veja abaixo), o `.env.example` ja está com os dados corretos pre-configurados*
+
 Executar os comandos
 ```sh
 composer install
