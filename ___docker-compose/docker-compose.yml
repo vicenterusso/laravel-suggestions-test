@@ -1,0 +1,68 @@
+version: '3'
+services:
+    web:
+        image: nginx:1.23.4-alpine
+        container_name: od_nginx
+        volumes:
+            - "./etc/nginx/nginx.conf:/etc/nginx/nginx.conf"
+            - "./etc/nginx/vhosts:/etc/nginx/sites-enabled"
+            - "./web:/var/www"
+        ports:
+            - "80:80"
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
+        command: /bin/sh -c "nginx -g 'daemon off;'"
+        restart: always
+        depends_on:
+            - php
+            - mysqldb
+    php:
+        image: vicenterusso/php-fpm:8.1.4
+        container_name: od_app
+        restart: always
+        user: 1000:1000
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
+        volumes:
+            - "./web/teste-od/composer.phar:/usr/local/bin/composer"
+            - "./etc/php/php.ini:/usr/local/etc/php/conf.d/php.ini"
+            - "./web:/var/www"
+    # php_queue:
+    #     image: vicenterusso/php-fpm:8.1.4
+    #     container_name: relva_queue
+    #     restart: always
+    #     working_dir: /var/www
+    #     command: php artisan queue:work --tries=3
+    #     volumes:
+    #         - "./web/teste-od:/var/www"
+
+    # scheduler:
+    #     image: mcuadros/ofelia:v0.3.7
+    #     container_name: relva_scheduler
+    #     depends_on:
+    #     - php
+    #     volumes:
+    #     - /var/run/docker.sock:/var/run/docker.sock:ro
+    #     - ./etc/ofelia/laravel-scheduler.ini:/etc/ofelia/config.ini
+
+    adminer:
+        image: adminer:4.8.1-standalone
+        container_name: od_adminer
+        restart: always
+        links:
+           - mysqldb
+        ports:
+           - 8050:8080
+    mysqldb:
+        image: mysql:5.7.22
+        container_name: od_mysql
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: ortho
+        ulimits:
+            nproc: 65535
+            nofile:
+                soft: 20000
+                hard: 40000
+        volumes:
+            - "./data:/var/lib/mysql"
