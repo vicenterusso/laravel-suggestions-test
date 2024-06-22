@@ -26,14 +26,27 @@ class CreateSuggestion extends Component
         return (new StoreSuggestionRequest())->messages();
     }
 
+    /**
+     * Função que cria a sugestão via Livewire. Toda a regra
+     * de validação está isolada em um FormRequest, sendo aproveitaada
+     * nos controllers via API tambem
+     *
+     * @return void
+     */
     public function createSuggestion() {
 
         $validSuggestion = $this->validate();
 
+        // Instancia o repositório explicitamente
+        // (Livewire não tem injeção de dependência)
         $repository = App::make(SuggestionRepository::class);
+
+        // Cria a sugestão e retorna
         $suggestion = $repository->createSuggestion($validSuggestion);
 
-        if(!is_null($suggestion)) {
+        // Se o retorno for um objeto 'Suggestion', a sugestão
+        // foi criada com sucesso
+        if($suggestion instanceof \App\Models\Suggestion) {
             $this->feedbackMessage = [
                 'type' => 'Sucesso',
                 'msg' => 'Sugestão enviada com sucesso!'

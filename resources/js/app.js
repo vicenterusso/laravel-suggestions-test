@@ -1,26 +1,37 @@
 import './bootstrap';
 
-
+/**
+ * Carrega um template HTML via AJAX que será reutilizado
+ * na listagem de sugestoes e na paginação
+ */
 async function loadTemplate(url) {
     const response = await fetch(url);
     return await response.text();
 }
 
+// Evento de carregamento do DOM
 document.addEventListener('DOMContentLoaded', function () {
+
     // Adiciona evento de click aos links de paginacaop
     document.getElementById('suggestion-pagination').addEventListener('click', async function (event) {
         if (event.target && event.target.classList.contains('page-link')) {
+            // Recupera a pagina clicada
             const page = event.target.getAttribute('data-page');
+
+            // Executa a requisição dos dados paginados
             await requestPage(page);
         }
     });
 
 
-    // Adiciona evento de click de votacao
+    // Adiciona evento de click de votação
     document.getElementById('suggestion-list').addEventListener('click', async function (event) {
         if (event.target && event.target.classList.contains('btn-vote')) {
+
+            // Recupear o ID da sugestão que está sendo votada
             const id = event.target.getAttribute('data-id');
 
+            // Executa a requisição de votação, exibindo o alerta de sucesso ou erro
             window.axios.post('/api/suggestion/vote/' + id)
                 .then(response => {
                     document.getElementById('alert-'+id).classList.remove('hidden');
@@ -32,8 +43,13 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+/**
+ * Função de requisição da API para listagem de sugestões, com o parametro
+ * 'page' indicando qual página de sugestões deve ser carregada
+ */
 async function requestPage(page) {
-    // Carrega um template HTML via AJAX para a substituicao apos a requisicao da API
+
+    // Carrega os templates HTML via AJAX para a substituicao apos a requisicao da API
     let suggestion_template = await loadTemplate('templates-js/suggestion-list.html');
     let suggestion_pagination_template = await loadTemplate('templates-js/suggestion-pagination.html');
 
@@ -45,7 +61,7 @@ async function requestPage(page) {
         // Para cada sugestão, substituir os placeholders do template
         response.data['data'].forEach(item => {
 
-            // Ajusta a data
+            // Ajusta a data BR
             let dateBR = (new Date(item['created_at'])).toLocaleDateString('pt-BR', {
                 year: 'numeric',
                 month: '2-digit',
@@ -53,6 +69,8 @@ async function requestPage(page) {
                 timeZone: 'UTC',
             })
 
+            // Realiza a substituição dos placeholders do
+            // template com os dados vindos da API
             let t = suggestion_template
                 .replace(/{{CREATED_AT}}/g, dateBR)
                 .replace(/{{TITULO}}/g, item['titulo'])
@@ -62,10 +80,11 @@ async function requestPage(page) {
                 .replace(/{{VOTES}}/g, item['votes']);
 
 
-            // Inserir o HTML no container
+            // Insere os dados gerados e substituidos no container de sugestoes
             container.insertAdjacentHTML('beforeend', t);
         });
 
+        // Calcula a paginação e substitui os placeholders do template
         let prevPage = response.data['current_page'] > 1 ? response.data['current_page'] - 1 : 1;
         let nextPage = response.data['current_page'] < response.data['last_page'] ? response.data['current_page'] + 1 : response.data['last_page'];
 
@@ -79,6 +98,10 @@ async function requestPage(page) {
     });
 }
 
+/**
+ * Evento de carregamento da pagina por completo, após o DOM,
+ * styles, scripts, imagens, etc
+ */
 window.onload = async function () {
 
     // Se existe o containr de listar sugestoes
@@ -91,13 +114,14 @@ window.onload = async function () {
     if(form) {
 
         function clearErrors() {
-            // Clear any previous error messages
+            // Limpa os erros antigos(pre-existentes) do formulario
             const errorDivs = document.querySelectorAll('.text-red-600');
             errorDivs.forEach(function(div) {
                 div.innerHTML = '';
             });
         }
 
+        // Exibe os erros no formulario vindos da API
         function displayErrors(errors) {
             Object.keys(errors).forEach(function(field) {
                 const fieldElement = document.querySelector(`[name="${field}"]`);
@@ -112,15 +136,18 @@ window.onload = async function () {
 
         // Adiciona evento de submit ao formulario
         form.addEventListener('submit', function (event) {
-            event.preventDefault();
 
+            // Evita que o formulario seja enviado via POST padrão
+            event.preventDefault();
             event.stopPropagation();
             event.stopImmediatePropagation();
 
+            // Limpa os erros
             clearErrors();
 
+            // Executa o request com os dados digitados no formulario e
+            // exibe o alerta de sucesso ou erro de acordo com o resultado
             const formData = new FormData(form);
-
             window.axios.post('/api/suggestion', formData)
                 .then(response => {
                     document.querySelector('#create-suggestion-container .success').style.display = 'block';

@@ -47,10 +47,11 @@ class User extends Authenticatable
         return $this->admin === 1;
     }
 
-    // Evento de criação de usuário
     public static function boot()
     {
         parent::boot();
+
+        // Evento de criação de usuário
         static::creating(function ($model) {
             // Se não houver nenhum usuário cadastrado,
             // o primeiro usuário será admin
